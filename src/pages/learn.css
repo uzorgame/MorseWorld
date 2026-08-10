@@ -1,0 +1,757 @@
+/* ============================================================
+   LEARN / READING — тренажер приймання на слух
+   ============================================================ */
+
+/* ---------- смуга уроку ---------- */
+
+.lsn__bar {
+  display: grid;
+  grid-template-columns: minmax(7rem, auto) 1fr minmax(6rem, auto) minmax(16rem, auto);
+  align-items: stretch;
+  margin-bottom: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  overflow: hidden;
+}
+.lsn__bar-cell {
+  display: grid;
+  gap: var(--s-2);
+  align-content: center;
+  padding: var(--s-3) var(--s-4);
+  border-right: 1px solid var(--border-soft);
+}
+.lsn__bar-cell:last-child {
+  border-right: 0;
+}
+.lsn__bar-cell > b {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.lsn__bar-cell > b span {
+  font-size: var(--t-sm);
+  color: var(--text-faint);
+}
+
+/* Літери уроку — той самий лад, що в таблиці символів. */
+.lsn__chars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.lsn__chars b {
+  display: grid;
+  place-items: center;
+  min-width: 1.75rem;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+/* Літера, яку додає саме цей урок: заради неї урок і існує. */
+.lsn__chars b[data-new] {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+.lsn__steps {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* ---------- режими ---------- */
+
+.lsn__modes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--s-2);
+  margin-bottom: var(--s-4);
+}
+.lsn__mode {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-3) var(--s-4);
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.lsn__mode:hover {
+  border-color: var(--border-strong);
+}
+.lsn__mode span {
+  font-size: var(--t-xs);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.lsn__mode[data-active] {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.lsn__mode[data-active] .micro {
+  color: var(--accent);
+}
+/* Номер кроку: видно, з чого починати, ще до того як щось прочитано. */
+.lsn__mode i {
+  font-style: normal;
+  font-family: var(--font-mono);
+  color: var(--text-faint);
+}
+.lsn__mode[data-active] i {
+  color: var(--accent);
+}
+
+/* ---------- знайомство ----------
+   Єдине місце, де код показаний відкрито: не побачивши, який сигнал якій
+   літері відповідає, вивчити її неможливо. У приймання він не потрапляє. */
+
+.intro__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+.intro__card {
+  display: grid;
+  gap: var(--s-2);
+  justify-items: center;
+  min-width: 8rem;
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+.intro__card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.intro__card b {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: var(--ls-h);
+}
+.intro__card code {
+  font-size: 1.125rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+.intro__card .micro {
+  color: var(--text-muted);
+}
+
+.intro__quiz {
+  display: grid;
+  gap: var(--s-3);
+}
+.intro__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.intro__choice {
+  min-width: 3.5rem;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.intro__choice:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.intro__choice[data-state='right'] {
+  border-color: var(--ok-500);
+  background: color-mix(in oklch, var(--ok-500) 12%, transparent);
+  color: var(--ok-500);
+}
+.intro__choice[data-state='wrong'] {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+.intro__after {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+/* ---------- передавання за зразком ---------- */
+
+.snd {
+  display: grid;
+  gap: var(--s-3);
+}
+.snd__task {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-4);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+}
+.snd__task b {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.snd__hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}
+.snd__hint code {
+  font-size: var(--t-sm);
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  word-break: break-word;
+}
+.snd__hint .micro {
+  color: var(--text-faint);
+}
+
+.snd__limits {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.snd__limits .micro {
+  color: var(--text-muted);
+}
+.snd__limits .micro:last-child {
+  color: var(--text-faint);
+}
+
+.snd__pad {
+  height: clamp(5rem, 12vh, 7rem);
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  touch-action: none;
+  user-select: none;
+  transition:
+    background 80ms var(--ease-out),
+    border-color 80ms var(--ease-out);
+}
+.snd__pad:hover:not(:disabled) {
+  border-color: var(--text-faint);
+}
+.snd__pad[data-down] {
+  background: var(--accent);
+  border-color: var(--accent);
+  border-style: solid;
+}
+.snd__pad[data-down] .micro {
+  color: var(--text-on-accent);
+}
+.snd__pad:disabled {
+  opacity: 0.55;
+}
+
+/* Поки стукають — тільки крапки й тире. Розшифровка приходить у кінці. */
+.snd__ribbon {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 2.25rem;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  overflow-x: auto;
+}
+.snd__el {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.snd__ribbon i {
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  flex: none;
+}
+.snd__ribbon i[data-el='dot'] {
+  width: 10px;
+}
+.snd__ribbon i[data-el='dash'] {
+  width: 28px;
+}
+.snd__ribbon i[data-el='live'] {
+  width: 10px;
+  background: var(--text);
+  animation: lsn-pulse 700ms var(--ease-in-out) infinite;
+}
+.snd__empty {
+  color: var(--text-faint);
+}
+.snd__sep {
+  flex: none;
+  width: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--text-faint);
+  text-align: center;
+}
+.snd__sep[data-word] {
+  color: var(--accent);
+}
+
+.snd__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+}
+.snd__tip {
+  color: var(--text-faint);
+  margin-left: auto;
+}
+
+.snd__result {
+  display: grid;
+  gap: var(--s-3);
+}
+
+/* ---------- усе зійшлося ----------
+   Не кольорова плашка «успіх», а квитанція в ладі позивних: код морзянкою,
+   під ним його значення капітеллю, число справа mono. Зелений тут лише в
+   лініях і тексті — заливки немає, як і в решді інтерфейсу. І з'являється він
+   тільки за повного збігу: якби ним позначали «майже правильно», він
+   перестав би щось означати. */
+
+.snd__ack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--ok-500);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  animation: snd-ack 320ms var(--ease-out) both;
+}
+.snd__ack-morse {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ok-500);
+}
+.snd__ack-body {
+  display: grid;
+  gap: 2px;
+  margin-right: auto;
+}
+.snd__ack-body b {
+  color: var(--ok-500);
+}
+.snd__ack-body span {
+  font-size: var(--t-xs);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.snd__ack-count {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ok-500);
+}
+
+/* За повного збігу зеленіють і самі літери — лініями, без заливки. */
+.snd__result[data-win] .snd__cell {
+  border-color: var(--ok-500);
+  background: transparent;
+}
+.snd__result[data-win] .snd__cell b,
+.snd__result[data-win] .snd__cell code {
+  color: var(--ok-500);
+}
+
+@keyframes snd-ack {
+  from {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .snd__ack {
+    animation: none;
+  }
+}
+.snd__cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.snd__cell {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  min-width: 3rem;
+  padding: var(--s-2) var(--s-2);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--accent-wash);
+}
+.snd__cell b {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--accent);
+}
+.snd__cell code {
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  color: var(--text-muted);
+}
+/* Що вийшло замість потрібного — під тим, що просили. */
+.snd__got {
+  color: var(--accent) !important;
+  text-decoration: line-through;
+}
+.snd__cell[data-ok] {
+  border-color: var(--border-soft);
+  background: transparent;
+}
+.snd__cell[data-ok] b {
+  color: var(--text);
+}
+.snd__tally {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+}
+.snd__tally b {
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+@keyframes lsn-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- завдання ---------- */
+
+.lsn {
+  display: grid;
+  gap: var(--s-4);
+  padding: clamp(var(--s-4), 3vw, var(--s-5));
+  margin-bottom: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.lsn__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.lsn__form {
+  display: grid;
+  gap: var(--s-3);
+}
+.lsn__input {
+  width: 100%;
+  height: 3.5rem;
+  padding-inline: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.lsn__input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.lsn__input:disabled {
+  background: var(--panel);
+  color: var(--text-faint);
+}
+.lsn__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* ---------- звірка ----------
+   Кожен символ окремою коміркою: угорі те, що прозвучало, знизу те, що вписали.
+   Порожньо знизу означає «збіглося» — правильне не має привертати увагу. */
+
+.lsn__result {
+  display: grid;
+  gap: var(--s-3);
+}
+.lsn__cells {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.lsn__cell {
+  display: grid;
+  gap: 1px;
+  min-width: 1.75rem;
+  padding: var(--s-2) 4px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--accent-wash);
+  text-align: center;
+}
+.lsn__cell b {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--accent);
+}
+.lsn__cell span {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  line-height: 1;
+  min-height: 0.75rem;
+  color: var(--text-muted);
+}
+.lsn__cell[data-ok] {
+  border-color: var(--border-soft);
+  background: transparent;
+}
+.lsn__cell[data-ok] b {
+  color: var(--text);
+}
+
+.lsn__tally {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+}
+.lsn__tally b {
+  letter-spacing: 0.12em;
+  color: var(--text);
+}
+
+.lsn__note {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+  text-wrap: pretty;
+  max-width: 52rem;
+  margin-top: var(--s-4);
+}
+
+/* ---------- статистика по літерах ---------- */
+
+.lsn__stats {
+  display: grid;
+  gap: var(--s-4);
+  padding: clamp(var(--s-4), 3vw, var(--s-5));
+  margin-top: var(--s-6);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.lsn__stats-head,
+.lsn__stats-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.lsn__chart {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-2);
+}
+.lsn__chart li {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(3.5rem, 5rem) 1fr 1fr;
+  gap: var(--s-3);
+  align-items: center;
+}
+/* Шапка двох стовпців: приймання й передавання — різні вміння. */
+.lsn__chart-head {
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--border-soft);
+}
+.lsn__chart-head .micro {
+  color: var(--text-faint);
+}
+/* Смужка й число разом: без числа смужка не каже, на скількох знаках вона. */
+.lsn__pair {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--s-2);
+  align-items: center;
+}
+.lsn__chart b {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.lsn__chart code {
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+.lsn__meter {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--panel-strong);
+  overflow: hidden;
+}
+.lsn__meter i {
+  display: block;
+  height: 100%;
+  background: var(--ok-500);
+  transform-origin: left center;
+  transition: transform var(--dur) var(--ease-out);
+}
+/* Слабка літера — та, за якою й видно, що доучувати. */
+.lsn__meter i[data-weak] {
+  background: var(--accent);
+}
+
+/* ---------- читання ---------- */
+
+.rd__pick {
+  text-align: left;
+}
+
+.rd__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-4);
+  padding: var(--s-3) var(--s-4);
+  margin-bottom: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+}
+.rd__title {
+  display: grid;
+  gap: 2px;
+  margin-right: auto;
+}
+.rd__title b {
+  font-family: var(--font-display);
+  font-size: var(--t-h3);
+  font-weight: 500;
+  letter-spacing: var(--ls-h);
+  line-height: 1.1;
+}
+.rd__src {
+  color: var(--accent);
+}
+
+.rd__passage {
+  padding: var(--s-4);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  text-wrap: pretty;
+}
+
+.rd__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.rd__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.rd__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.rd__dots i[data-past] {
+  background: var(--text-faint);
+}
+.rd__dots i[data-here] {
+  background: var(--accent);
+  transform: scale(1.35);
+}
+
+@media (max-width: 1000px) {
+  .lsn__bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lsn__alphabet {
+    grid-column: 1 / -1;
+    order: 3;
+    border-right: 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .lsn__steps {
+    grid-column: 1 / -1;
+    order: 4;
+    border-top: 1px solid var(--border-soft);
+  }
+  .lsn__chart li {
+    grid-template-columns: 1.5rem 1fr 1fr;
+  }
+  .lsn__chart code {
+    display: none;
+  }
+  .lsn__chart-head b + code + .micro {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lsn__meter i {
+    transition: none;
+  }
+}

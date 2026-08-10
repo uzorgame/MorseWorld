@@ -1,0 +1,690 @@
+/* ============================================================
+   BOOT — «SIGNAL ACQUISITION»
+   Тест-карта приймача: сітка, приціли, шкала, захоплення сигналу.
+   Усі тривалості множаться на --sp (?bootspeed=N) для налагодження.
+   ============================================================ */
+
+.boot {
+  --sp: 1;
+  /* власна палітра запуску: насиченіша за сайт, розрахована на multiply */
+  --g-warm: oklch(68% 0.185 32);
+  --g-cool: oklch(70% 0.1 235);
+  --g-slate: oklch(90% 0.022 220);
+  --g-ink: oklch(38% 0.065 250);
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  background: var(--bg);
+  cursor: pointer;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  /* Жодного проявлення: перший же намальований кадр мусить бути непрозорим,
+     інакше під ним встигає блимнути сайт. */
+}
+
+.boot[data-phase='handoff'],
+.boot[data-phase='done'] {
+  animation: boot-lift calc(700ms * var(--sp)) var(--ease-signal) forwards;
+  pointer-events: none;
+}
+
+@keyframes boot-lift {
+  to {
+    transform: translateY(-101%);
+  }
+}
+
+@keyframes boot-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- сітка ---------- */
+
+.boot__grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: clamp(44px, 5vw, 72px) clamp(44px, 5vw, 72px);
+  opacity: 0;
+  animation: boot-grid calc(700ms * var(--sp)) var(--ease-out) forwards;
+  mask-image: radial-gradient(130% 100% at 50% 50%, #000 45%, transparent 100%);
+}
+
+@keyframes boot-grid {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- фоновий вордмарк ---------- */
+
+.boot__ghost {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+.boot__ghost span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(6rem, 21vw, 21rem);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: var(--panel-strong);
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(1.12);
+  animation: boot-ghost calc(1400ms * var(--sp)) var(--ease-out) calc(120ms * var(--sp)) forwards;
+}
+
+@keyframes boot-ghost {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- рамка тест-карти ---------- */
+
+.boot__frame {
+  position: absolute;
+  inset: clamp(0.75rem, 2.2vw, 2rem);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl);
+  pointer-events: none;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  animation: boot-frame calc(760ms * var(--sp)) var(--ease-signal) calc(60ms * var(--sp)) forwards;
+}
+
+@keyframes boot-frame {
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.boot__corner {
+  position: absolute;
+  width: clamp(3rem, 7vw, 6rem);
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.boot__corner::before,
+.boot__corner::after {
+  content: '';
+  position: absolute;
+  background: var(--border-strong);
+}
+.boot__corner::before {
+  left: 20%;
+  right: 20%;
+  top: 50%;
+  height: 1px;
+}
+.boot__corner::after {
+  top: 20%;
+  bottom: 20%;
+  left: 50%;
+  width: 1px;
+}
+.boot__corner--tl {
+  top: 4%;
+  left: 3%;
+}
+.boot__corner--tr {
+  top: 4%;
+  right: 3%;
+}
+.boot__corner--bl {
+  bottom: 4%;
+  left: 3%;
+}
+.boot__corner--br {
+  bottom: 4%;
+  right: 3%;
+}
+.boot__corner--br::before {
+  rotate: 45deg;
+}
+.boot__corner--br::after {
+  rotate: 45deg;
+}
+
+/* ---------- приціли ---------- */
+
+.boot__crosshairs i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--x);
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--border-strong) 10%,
+    var(--border-strong) 90%,
+    transparent
+  );
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  animation: boot-crosshair calc(620ms * var(--sp)) var(--ease-out) calc(var(--d) * var(--sp))
+    forwards;
+}
+
+.boot__crosshairs i::before,
+.boot__crosshairs i::after {
+  content: attr(data-code);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  background: var(--bg);
+  padding: 2px 4px;
+}
+.boot__crosshairs i::before {
+  top: calc(var(--s-6) + var(--s-2));
+}
+.boot__crosshairs i::after {
+  bottom: calc(var(--s-6) + var(--s-2));
+}
+
+@keyframes boot-crosshair {
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- вертикальні бігунки ---------- */
+
+.boot__marquees {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: clamp(2.5rem, 7vw, 6rem);
+  pointer-events: none;
+}
+
+.boot__marquee {
+  position: relative;
+  width: 1.6em;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: clamp(0.8rem, 1.05vw, 1rem);
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  opacity: 0;
+  animation: boot-fade calc(420ms * var(--sp)) var(--ease-out)
+    calc((160ms + var(--i) * 90ms) * var(--sp)) forwards;
+}
+
+.boot__marquee span {
+  position: absolute;
+  inset-inline: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  white-space: nowrap;
+  animation: boot-scroll calc(30s - var(--i) * 5s) linear infinite;
+}
+.boot__marquee span:nth-child(2) {
+  animation-delay: calc(-15s + var(--i) * 2.5s);
+}
+.boot__marquee:nth-child(2) {
+  color: var(--rx);
+}
+.boot__marquee:nth-child(3) {
+  color: var(--text-faint);
+}
+.boot__marquee:nth-child(4) {
+  color: var(--accent);
+}
+
+@keyframes boot-scroll {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* ---------- гігантські крапки й тире ---------- */
+
+.boot__glyphs {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.boot__glyphs .g {
+  position: absolute;
+  opacity: 0;
+  transform: translate3d(0, 22%, 0) scale(0.88);
+  animation: boot-glyph calc(900ms * var(--sp)) var(--ease-out) calc(var(--gd, 0ms) * var(--sp))
+    forwards;
+}
+
+@keyframes boot-glyph {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.g--dot {
+  border-radius: 50%;
+}
+.g--dash {
+  border-radius: var(--r-pill);
+}
+
+.g--a {
+  --gd: 220ms;
+  left: -7vw;
+  top: 6vh;
+  width: 38vmin;
+  height: 38vmin;
+  background: var(--g-warm);
+}
+.g--b {
+  --gd: 320ms;
+  right: -10vw;
+  top: 11vh;
+  width: 58vmin;
+  height: 19vmin;
+  background: var(--g-cool);
+}
+.g--c {
+  --gd: 420ms;
+  right: 9vw;
+  bottom: 14vh;
+  width: 30vmin;
+  height: 30vmin;
+  background: var(--g-warm);
+}
+.g--d {
+  --gd: 520ms;
+  left: 4vw;
+  bottom: 8vh;
+  width: 46vmin;
+  height: 15vmin;
+  background: var(--g-slate);
+}
+.g--e {
+  --gd: 620ms;
+  left: 7vw;
+  top: 21vh;
+  width: 20vmin;
+  height: 20vmin;
+  background: var(--g-cool);
+}
+.g--f {
+  --gd: 720ms;
+  right: 5vw;
+  top: 17vh;
+  width: 24vmin;
+  height: 8vmin;
+  background: var(--g-ink);
+}
+
+/* ---------- бічні панелі ---------- */
+
+.boot__side {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: color-mix(in oklch, var(--bg) 84%, transparent);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  animation: boot-fade calc(480ms * var(--sp)) var(--ease-out) calc(240ms * var(--sp)) forwards;
+}
+.boot__side--l {
+  left: clamp(2rem, 6vw, 5rem);
+}
+.boot__side--r {
+  right: clamp(2rem, 6vw, 5rem);
+  justify-items: end;
+}
+
+.boot__scope {
+  position: relative;
+  width: 6rem;
+  height: 3.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.boot__blip {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rx);
+  animation: boot-blip calc(2.4s * var(--sp)) var(--ease-in-out) infinite;
+}
+.boot__blip:nth-child(1) {
+  left: 18%;
+  top: 40%;
+  animation-delay: 0s;
+}
+.boot__blip:nth-child(2) {
+  left: 52%;
+  top: 62%;
+  animation-delay: calc(0.35s * var(--sp));
+}
+.boot__blip:nth-child(3) {
+  left: 76%;
+  top: 30%;
+  animation-delay: calc(0.7s * var(--sp));
+}
+
+@keyframes boot-blip {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(0.6);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.boot__bars {
+  display: flex;
+  gap: 3px;
+}
+.boot__bars b {
+  width: 9px;
+  height: 22px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+}
+.boot[data-phase='lock'] .boot__bars b,
+.boot[data-phase='handoff'] .boot__bars b,
+.boot[data-phase='done'] .boot__bars b {
+  animation: boot-bar calc(240ms * var(--sp)) var(--ease-out) calc(var(--b) * 55ms * var(--sp))
+    forwards;
+}
+@keyframes boot-bar {
+  to {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+/* ---------- центр ---------- */
+
+.boot__stage {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--s-5);
+  padding: var(--s-6) var(--shell-pad);
+  text-align: center;
+}
+
+.boot__stamp {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  opacity: 0;
+  animation: boot-fade calc(400ms * var(--sp)) var(--ease-out) calc(120ms * var(--sp)) forwards;
+}
+
+.boot__message {
+  display: grid;
+  gap: 0.04em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3rem, 9vw, 8rem);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+}
+
+.boot__line {
+  display: grid;
+  grid-template-areas: 'stack';
+  place-items: center;
+}
+.boot__line > * {
+  grid-area: stack;
+  transition:
+    opacity calc(420ms * var(--sp)) var(--ease-out),
+    filter calc(420ms * var(--sp)) var(--ease-out),
+    transform calc(420ms * var(--sp)) var(--ease-out);
+  transition-delay: calc(var(--l) * 110ms * var(--sp));
+}
+
+.boot__line-morse {
+  font-size: 0.44em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.boot__line-text {
+  opacity: 0;
+  filter: blur(12px);
+  transform: scale(0.96);
+  color: var(--text);
+}
+
+.boot[data-phase='lock'] .boot__line-morse,
+.boot[data-phase='handoff'] .boot__line-morse,
+.boot[data-phase='done'] .boot__line-morse {
+  opacity: 0;
+  filter: blur(8px);
+}
+.boot[data-phase='lock'] .boot__line-text,
+.boot[data-phase='handoff'] .boot__line-text,
+.boot[data-phase='done'] .boot__line-text {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.boot__status {
+  display: grid;
+  grid-template-areas: 'stack';
+  height: 1em;
+}
+.boot__status span {
+  grid-area: stack;
+  opacity: 0;
+  transition: opacity calc(260ms * var(--sp)) var(--ease-out);
+}
+.boot[data-phase='carrier'] [data-when='scan'],
+.boot[data-phase='scan'] [data-when='scan'] {
+  opacity: 1;
+  color: var(--text-body);
+  animation: boot-pulse calc(1.1s * var(--sp)) steps(1, end) infinite;
+}
+.boot[data-phase='lock'] [data-when='lock'],
+.boot[data-phase='handoff'] [data-when='lock'],
+.boot[data-phase='done'] [data-when='lock'] {
+  opacity: 1;
+  color: var(--accent);
+}
+
+@keyframes boot-pulse {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* ---------- шкала частот ---------- */
+
+.boot__dial {
+  position: relative;
+  z-index: 3;
+  margin: 0 clamp(1.5rem, 4vw, 3.5rem) clamp(1.5rem, 4vw, 3.5rem);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  display: grid;
+  gap: var(--s-3);
+  opacity: 0;
+  animation: boot-rise calc(520ms * var(--sp)) var(--ease-out) calc(80ms * var(--sp)) forwards;
+}
+
+@keyframes boot-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.boot__dial-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.boot__progress {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--g-slate);
+  overflow: hidden;
+}
+.boot__progress b {
+  position: absolute;
+  inset: 0 100% 0 0;
+  background: var(--accent);
+  animation: boot-progress calc(2.9s * var(--sp)) var(--ease-in-out) forwards;
+}
+@keyframes boot-progress {
+  0% {
+    right: 100%;
+  }
+  55% {
+    right: 32%;
+  }
+  75% {
+    right: 26%;
+  }
+  100% {
+    right: 0;
+  }
+}
+
+.boot__skip {
+  color: var(--text-faint);
+}
+
+.boot__ticks {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 16px;
+}
+.boot__ticks i {
+  width: 1px;
+  height: 6px;
+  background: var(--border-strong);
+}
+.boot__ticks i[data-major] {
+  height: 14px;
+  background: var(--text-muted);
+}
+
+.boot__needle {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--accent);
+  left: 0;
+  animation: boot-needle calc(3s * var(--sp)) var(--ease-in-out) forwards;
+}
+.boot__needle::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateX(-50%);
+}
+@keyframes boot-needle {
+  0% {
+    left: 2%;
+  }
+  40% {
+    left: 88%;
+  }
+  62% {
+    left: 21%;
+  }
+  100% {
+    left: 47%;
+  }
+}
+
+.boot__dial-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.boot__dial-labels b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .boot__corner {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .boot__side,
+  .boot__marquees,
+  .boot__crosshairs {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .boot__dial-labels span:nth-child(even) {
+    display: none;
+  }
+}

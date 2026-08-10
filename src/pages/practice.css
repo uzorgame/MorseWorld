@@ -1,0 +1,360 @@
+/* ============================================================
+   PRACTICE — ручний ключ
+   ============================================================ */
+
+.key {
+  display: grid;
+  gap: var(--s-4);
+  padding: clamp(var(--s-4), 3vw, var(--s-5));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  margin-bottom: var(--s-4);
+}
+
+/* ---------- смуга стану ----------
+   Не банер із написом, а приладова панель: комірки з волосяними
+   роздільниками, мono-числа, підписи капітеллю. Той самий лад, що в
+   .specs і в нижній сигнальній смузі. */
+
+.key__bar {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1.6fr) repeat(3, minmax(6rem, 1fr));
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.key__bar-cell {
+  display: grid;
+  gap: var(--s-2);
+  align-content: center;
+  padding: var(--s-3) var(--s-4);
+  border-right: 1px solid var(--border-soft);
+}
+.key__bar-cell:last-child {
+  border-right: 0;
+}
+.key__bar-cell b {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Стан ліворуч: підсвічується сама комірка, а не вся смуга. */
+.key__bar-state {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  background: var(--surface);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.key__bar[data-stage='sending'] .key__bar-state {
+  background: var(--accent);
+}
+.key__bar[data-stage='sending'] .key__bar-state .micro {
+  color: var(--text-on-accent);
+}
+
+/* Індикатор говорить мовою самого сервісу: крапка спокою, тире передачі. */
+.key__mark {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: var(--r-pill);
+  background: var(--text-faint);
+  transition:
+    width 90ms var(--ease-out),
+    background 90ms var(--ease-out);
+}
+.key__bar[data-stage='live'] .key__mark {
+  background: var(--rx);
+}
+.key__bar[data-stage='sending'] .key__mark {
+  width: 28px;
+  background: var(--text-on-accent);
+}
+
+/* ---------- площадка ---------- */
+
+.key__pad {
+  height: clamp(7rem, 18vh, 10rem);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  user-select: none;
+  transition:
+    background 80ms var(--ease-out),
+    border-color 80ms var(--ease-out),
+    transform 60ms var(--ease-out);
+}
+.key__pad:hover {
+  border-color: var(--text-faint);
+}
+.key__pad[data-down] {
+  background: var(--accent);
+  border-color: var(--accent);
+  border-style: solid;
+  color: var(--text-on-accent);
+  transform: scale(0.997);
+}
+
+.key__pad-inner {
+  display: grid;
+  gap: var(--s-2);
+  justify-items: center;
+  text-align: center;
+}
+.key__pad[data-down] .micro {
+  color: var(--text-on-accent);
+}
+.key__unit {
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.key__pad[data-down] .key__unit {
+  color: var(--text-on-accent);
+  opacity: 0.85;
+}
+
+/* ---------- стрічка елементів ---------- */
+
+.key__ribbon {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 2.25rem;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  overflow-x: auto;
+}
+.key__ribbon i {
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  flex: none;
+  animation: key-in 160ms var(--ease-out);
+}
+.key__ribbon i[data-el='dot'] {
+  width: 10px;
+}
+.key__ribbon i[data-el='dash'] {
+  width: 28px;
+}
+/* Знак, що ліг близько до порогу: саме тут розбір і помиляється. */
+.key__ribbon i[data-edge] {
+  background: var(--rx);
+}
+/* Елемент, який зараз передається, ще не має довжини — показуємо пульс. */
+.key__ribbon i[data-el='live'] {
+  width: 10px;
+  background: var(--text);
+  animation: key-live 700ms var(--ease-in-out) infinite;
+}
+.key__ribbon-empty {
+  color: var(--text-faint);
+}
+
+/* Межі в стрічці — не сигнал, а розрив між сигналами. */
+.key__sep {
+  flex: none;
+  width: 12px;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--text-faint);
+  text-align: center;
+}
+.key__sep[data-word] {
+  color: var(--accent);
+}
+
+/* ---------- ваш стук проти цілі ---------- */
+
+/* Окрема панель під повзунками, а не рядок усередині ключа — тому й оформлення
+   як у самостійного блоку. */
+.key__aim {
+  display: grid;
+  gap: var(--s-4);
+  padding: clamp(var(--s-4), 3vw, var(--s-5));
+  margin-top: var(--s-6);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.key__aim-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.key__aim-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--s-2) var(--s-4);
+  margin: 0;
+}
+.key__aim-row {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-2) var(--s-3);
+  border-left: 2px solid var(--border);
+}
+.key__aim-row dt {
+  font-size: var(--t-xs);
+  color: var(--text-muted);
+}
+.key__aim-row dd {
+  margin: 0;
+  font-size: var(--t-sm);
+  font-variant-numeric: tabular-nums;
+}
+.key__aim-row dd span {
+  color: var(--text-faint);
+}
+/* Розійшлося вдвічі й більше — ось що виправляти першим. */
+.key__aim-row[data-off] {
+  border-left-color: var(--accent);
+}
+.key__aim-row[data-off] dd {
+  color: var(--accent);
+}
+.key__aim-note {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+  text-wrap: pretty;
+  max-width: 52rem;
+}
+
+/* ---------- читання ---------- */
+
+.key__read {
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr;
+  gap: var(--s-4);
+}
+
+.key__now,
+.key__text {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-4);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+}
+
+.key__now b {
+  font-size: 1.5rem;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  line-height: 1.2;
+  min-height: 1.8rem;
+}
+
+.key__text {
+  background: var(--panel);
+}
+.key__text p {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: var(--ls-h);
+  line-height: 1.35;
+  word-break: break-word;
+  min-height: 1.35em;
+}
+.key__ph {
+  color: var(--text-faint);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.key__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  animation: key-live 900ms steps(1, end) infinite;
+}
+
+/* ---------- транскрипція ---------- */
+
+.key__morse {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+}
+.key__morse code {
+  font-size: var(--t-body);
+  letter-spacing: 0.12em;
+  color: var(--text);
+  word-break: break-word;
+  line-height: 1.7;
+}
+
+.key__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+/* ---------- рух ---------- */
+
+@keyframes key-in {
+  from {
+    transform: scaleX(0.4);
+    opacity: 0;
+  }
+}
+@keyframes key-live {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 860px) {
+  .key__bar {
+    grid-template-columns: 1fr 1fr;
+  }
+  .key__bar-state {
+    grid-column: 1 / -1;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .key__bar-cell:nth-child(3) {
+    border-right: 0;
+  }
+}
+@media (max-width: 640px) {
+  .key__read {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .key__ribbon i {
+    animation: none;
+  }
+  .key__ribbon i[data-el='live'] {
+    animation: none;
+    opacity: 0.6;
+  }
+}

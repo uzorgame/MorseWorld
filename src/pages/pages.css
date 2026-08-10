@@ -1,0 +1,419 @@
+/* ============================================================
+   PAGES — hero, панелі, сітки
+   ============================================================ */
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  padding-block: clamp(var(--s-8), 10vw, var(--s-10)) var(--s-8);
+  overflow: hidden;
+}
+
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: clamp(48px, 6vw, 84px) clamp(48px, 6vw, 84px);
+  mask-image: radial-gradient(90% 70% at 50% 0%, #000 0%, transparent 100%);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  display: grid;
+  gap: var(--s-5);
+  justify-items: start;
+  max-width: 58rem;
+}
+
+.hero__title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+/* біжуча стрічка елементів під героєм */
+.hero__tape {
+  position: relative;
+  margin-top: var(--s-6);
+  height: 44px;
+  border-block: 1px solid var(--border);
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.hero__tape-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  animation: tape 30s linear infinite;
+}
+.hero__tape-track i {
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--text);
+  flex: none;
+}
+.hero__tape-track i[data-el='dot'] {
+  width: 10px;
+}
+.hero__tape-track i[data-el='dash'] {
+  width: 30px;
+}
+.hero__tape-track i[data-el='gap'] {
+  width: 26px;
+  background: transparent;
+}
+.hero__tape-track i[data-hot] {
+  background: var(--accent);
+}
+@keyframes tape {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- feature grid ---------- */
+
+.feats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--s-4);
+}
+
+.feat {
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  padding: var(--s-5);
+  transition:
+    border-color var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out);
+}
+.feat:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.feat p {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.feat__code {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  line-height: 1;
+}
+.feat[data-soon] .feat__code {
+  color: var(--text-faint);
+}
+
+/* ---------- specs band ---------- */
+
+.specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.spec {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  border-right: 1px solid var(--border-soft);
+}
+.spec:last-child {
+  border-right: 0;
+}
+.spec b {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  letter-spacing: var(--ls-h);
+  line-height: 1;
+}
+.spec span {
+  font-size: var(--t-sm);
+  color: var(--text-body);
+}
+
+/* ---------- generic page head ---------- */
+
+.page {
+  padding-block: clamp(var(--s-7), 7vw, var(--s-9));
+}
+
+.page__head {
+  display: grid;
+  gap: var(--s-4);
+  max-width: 46rem;
+  margin-bottom: var(--s-7);
+}
+
+.page__badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--panel);
+}
+
+/* ---------- placeholder blocks (поки без ядра) ---------- */
+
+.stub {
+  display: grid;
+  gap: var(--s-4);
+  padding: clamp(var(--s-5), 4vw, var(--s-7));
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 9px,
+      var(--panel) 9px,
+      var(--panel) 18px
+    ),
+    var(--surface);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-lg);
+}
+.stub__body {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.stub ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: var(--s-2);
+  font-size: var(--t-sm);
+  color: var(--text-body);
+}
+
+/* ---------- about ---------- */
+
+.about {
+  display: grid;
+  gap: clamp(var(--s-7), 6vw, var(--s-9));
+}
+
+/* паспорт проєкту: мono-мітка ліворуч, значення праворуч */
+.sheet {
+  border-top: 1px solid var(--border);
+}
+.sheet__row {
+  display: grid;
+  grid-template-columns: 13rem 1fr;
+  gap: var(--s-4);
+  align-items: baseline;
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.sheet__row dd {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.sheet__row dd b {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.about-sec {
+  display: grid;
+  gap: var(--s-4);
+}
+.about-sec__label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.about-sec__label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.prose {
+  display: grid;
+  gap: var(--s-4);
+  max-width: 46rem;
+}
+.prose p {
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.prose strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--accent);
+}
+
+/* смуга конвеєра */
+.pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+}
+.pipeline b {
+  font-weight: 500;
+  color: var(--text);
+}
+.pipeline i {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--s-5);
+}
+
+.plist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--s-3);
+}
+.plist li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: var(--s-3);
+  align-items: baseline;
+  font-size: var(--t-sm);
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+.plist li::before {
+  content: attr(data-code);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.plist--out li::before {
+  color: var(--text-faint);
+}
+
+/* Перемикач розділів: чотири картки в один ряд, поки для цього є місце. */
+.about-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--s-3);
+}
+
+/* Поточний розділ лишається в списку, але не вдає посилання, куди варто йти. */
+.about-nav__item[data-here] {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.about-nav__item[data-here]:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--accent);
+}
+.about-nav__item[data-here] .micro {
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .sheet__row {
+    grid-template-columns: 1fr;
+    gap: var(--s-2);
+  }
+}
+
+/* ---------- chart ---------- */
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--s-2);
+}
+.chart-cell {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.chart-cell:hover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.chart-cell b {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.chart-cell code {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.chart-search {
+  width: min(22rem, 100%);
+  height: 2.5rem;
+  padding-inline: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+}
+.chart-search:focus {
+  outline: none;
+  border-color: var(--accent);
+}

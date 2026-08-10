@@ -1,0 +1,326 @@
+/* ============================================================
+   TRANSLATOR — двонаправлений переклад із відтворенням
+   ============================================================ */
+
+.tr-wrap {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.tr {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  overflow: hidden;
+}
+
+.tr__side {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 17rem;
+}
+
+/* Те, що редагують, стоїть ліворуч; те, що виходить, — праворуч. */
+.tr__side--text {
+  order: 1;
+}
+.tr__divider {
+  order: 2;
+}
+.tr__side--morse {
+  order: 3;
+}
+.tr[data-dir='decode'] .tr__side--morse {
+  order: 1;
+}
+.tr[data-dir='decode'] .tr__side--text {
+  order: 3;
+}
+
+.tr__head,
+.tr__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+}
+.tr__head {
+  border-bottom: 1px solid var(--border-soft);
+}
+.tr__foot {
+  border-top: 1px solid var(--border-soft);
+}
+
+.tr__field {
+  width: 100%;
+  height: 100%;
+  padding: var(--s-4);
+  border: 0;
+  resize: none;
+  background: transparent;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+.tr__field:focus {
+  outline: none;
+}
+.tr__field--morse {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.tr__field::placeholder {
+  color: var(--text-faint);
+}
+
+.tr__out {
+  display: block;
+  overflow-y: auto;
+  text-wrap: pretty;
+}
+
+.tr__ph {
+  color: var(--text-faint);
+}
+
+/* ---------- морзе як відтворення, а не текст ---------- */
+
+.tr__morse {
+  display: block;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  line-height: 1.9;
+  word-break: break-word;
+}
+
+/* Ще не прозвучало — приглушене. Прозвучало — повний контраст. */
+.tr__morse span {
+  color: var(--text-faint);
+  transition:
+    color 90ms linear,
+    text-shadow 90ms linear;
+}
+.tr__morse span[data-played] {
+  color: var(--accent);
+}
+.tr__morse[data-playing] span[data-played]:last-of-type {
+  text-shadow: 0 0 12px var(--accent);
+}
+
+.tr__play[data-active],
+.btn--quiet[data-active] {
+  color: var(--accent);
+}
+
+/* Підказка замість стіни знаків питання: сказати, у чому річ, і дати виправити. */
+.tr__swapnote {
+  display: grid;
+  gap: var(--s-3);
+  align-content: center;
+  justify-items: start;
+  padding: var(--s-4);
+  background: var(--panel);
+}
+.tr__swapnote b {
+  font-family: var(--font-display);
+  font-size: var(--t-h3);
+  font-weight: 500;
+  letter-spacing: var(--ls-h);
+  line-height: 1.15;
+  color: var(--accent);
+}
+
+.tr__divider {
+  width: 1px;
+  background: var(--border);
+  position: relative;
+}
+.tr__swap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-body);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    rotate var(--dur) var(--ease-out);
+}
+.tr__swap:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  rotate: 180deg;
+}
+
+.tr__blocked {
+  color: var(--accent);
+}
+
+/* ---------- повзунки ---------- */
+
+.tr-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  animation: tr-controls-in var(--dur) var(--ease-out);
+}
+
+@keyframes tr-controls-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.sld {
+  display: grid;
+  gap: var(--s-2);
+  cursor: pointer;
+}
+
+.sld__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+.sld__value {
+  color: var(--text);
+  font-size: var(--t-xs);
+}
+
+.sld__track {
+  position: relative;
+  display: block;
+  height: 1.5rem;
+}
+
+.sld__ticks {
+  position: absolute;
+  inset: auto 0 0.35rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 12px;
+  pointer-events: none;
+}
+.sld__ticks i {
+  width: 1px;
+  height: 5px;
+  background: var(--border-strong);
+  transition:
+    background 160ms var(--ease-out),
+    height 160ms var(--ease-out);
+}
+.sld__ticks i[data-major] {
+  height: 11px;
+}
+.sld__ticks i[data-lit] {
+  background: var(--accent);
+  height: 11px;
+}
+.sld__ticks i[data-major][data-lit] {
+  height: 14px;
+}
+
+.sld__fill {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: calc(var(--ratio) * 100%);
+  background: var(--accent);
+  border-radius: var(--r-pill);
+  transition: width 90ms linear;
+  pointer-events: none;
+}
+
+.sld__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.sld__input:focus-visible + * {
+  outline: 2px solid var(--accent);
+}
+
+/* ---------- ручний ключ ---------- */
+
+.tr-key {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  animation: tr-controls-in var(--dur) var(--ease-out);
+}
+
+.tr-key__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.tr-key__pad {
+  height: 5rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--panel);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  user-select: none;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform 60ms var(--ease-out);
+}
+.tr-key__pad:active {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+  border-style: solid;
+  transform: scale(0.995);
+}
+.tr-key__hint {
+  font-size: var(--t-sm);
+  color: var(--text-muted);
+}
+
+/* ---------- підпис під карткою ---------- */
+
+.tr-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+@media (max-width: 780px) {
+  .tr {
+    grid-template-columns: 1fr;
+  }
+  .tr__divider {
+    width: auto;
+    height: 1px;
+  }
+}
