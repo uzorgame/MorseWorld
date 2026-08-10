@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 
 import { audio } from './audio/MorseAudio'
 import { BootSequence } from './components/boot/BootSequence'
@@ -7,6 +7,7 @@ import { SiteHeader } from './components/shell/SiteHeader'
 import { SmoothScroll } from './components/shell/SmoothScroll'
 import { SignalBar } from './components/shell/SignalBar'
 import { SiteFooter } from './components/shell/SiteFooter'
+import { routeMetaFor } from './i18n/routes'
 import { useLang } from './state/lang'
 
 import { Home } from './pages/Home'
@@ -44,29 +45,23 @@ function hideSite(hidden: boolean) {
 const BOOTS_ON_LOAD = shouldBoot()
 hideSite(BOOTS_ON_LOAD)
 
-const TITLE = {
-  uk: 'MorseWorld — переклад, тренування, навчання',
-  en: 'MorseWorld — translate, practise, learn',
-} as const
-
-const DESCRIPTION = {
-  uk: 'Клієнтський інструмент для роботи з азбукою Морзе: кодування, декодування зі звуку, ручна практика й навчання за методом Коха.',
-  en: 'A client-side tool for working with Morse code: encoding, decoding from audio, hands-on practice and learning by the Koch method.',
-} as const
-
 const SKIP_LINK = { uk: 'До основного вмісту', en: 'Skip to main content' } as const
 
 export function App() {
   const [booting, setBooting] = useState(BOOTS_ON_LOAD)
   const { lang } = useLang()
 
-  // <html lang>, заголовок вкладки й опис мають відповідати вибраній мові, а не
-  // лишатися застиглими на тому, що прописано в index.html при першому запиті.
+  // <html lang>, заголовок вкладки й опис мають відповідати і вибраній мові, і
+  // відкритій сторінці, а не лишатися застиглими на тому, що прописано в
+  // index.html при першому запиті. Збірка вписує туди англійські значення цього
+  // ж маршруту, тому переходи всередині сайту продовжують те, що вже стоїть.
+  const { pathname } = useLocation()
   useEffect(() => {
+    const meta = routeMetaFor(pathname)
     document.documentElement.lang = lang
-    document.title = TITLE[lang]
-    document.querySelector('meta[name="description"]')?.setAttribute('content', DESCRIPTION[lang])
-  }, [lang])
+    document.title = meta.title[lang]
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description[lang])
+  }, [lang, pathname])
 
   const finishBoot = useCallback(() => {
     sessionStorage.setItem(BOOT_KEY, '1')

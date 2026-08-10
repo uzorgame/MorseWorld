@@ -3,10 +3,16 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
-  // Відносна база: збірка кладеться в підкаталог uz-or.com/MorseWorld/, і
-  // абсолютні шляхи на /assets/ шукали б їх у корені домену. Так само зроблено
-  // в Poster і Whisper, які лежать там же поруч.
-  base: './',
+  /**
+   * Сайт живе в підкаталозі uz-or.com/MorseWorld/, тому база не коренева.
+   *
+   * І не відносна — хоч Poster і Whisper поруч зроблені саме так. Вони
+   * односторінкові, а тут кожен маршрут лежить власним файлом: із
+   * `/MorseWorld/learn/reading/index.html` відносний `./assets/` шукав би
+   * скрипти в `/MorseWorld/learn/reading/assets/`, де їх немає. Абсолютний шлях
+   * від бази однаково правильний на будь-якій глибині.
+   */
+  base: '/MorseWorld/',
   plugins: [react()],
   resolve: {
     alias: {
