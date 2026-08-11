@@ -43,6 +43,16 @@ const swapLink = (html, rel, href) =>
 
 const escape = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;')
 
+/**
+ * Прибрати блоки, помічені як `data-root-only`.
+ *
+ * Structured data описує застосунок цілком, і цей застосунок — `/MorseWorld/`.
+ * Розмножений по всіх десяти сторінках, він казав би, що кожна з них — окрема
+ * програма з тією ж назвою; це не помилка розмітки, але це неправда.
+ */
+const stripRootOnly = (html) =>
+  html.replace(/[ \t]*<script type="application\/ld\+json" data-root-only>[\s\S]*?<\/script>\n?/g, '')
+
 const stamp = new Date().toISOString().slice(0, 10)
 const written = []
 
@@ -59,6 +69,7 @@ for (const route of ROUTES) {
   html = swapMeta(html, 'twitter:title', title)
   html = swapMeta(html, 'twitter:description', description)
   html = swapLink(html, 'canonical', url)
+  if (route.path) html = stripRootOnly(html)
 
   const dir = route.path ? join(DIST, route.path) : DIST
   mkdirSync(dir, { recursive: true })

@@ -32,6 +32,46 @@
       content="Translate Morse both ways, hear it, key it by hand and learn to copy by ear. No account, no server."
     />
     <meta name="twitter:image" content="https://uz-or.com/MorseWorld/og-image.png" />
+
+    <!--
+      Що це за річ, машинозчитувано. Без цього для пошуку MorseWorld лишається
+      просто словом на сторінці, а не програмою з автором і ціною.
+
+      Свідомо без aggregateRating: справжніх відгуків немає, а вигаданий рейтинг
+      це і порушення правил, і марно — Google не показує оцінку, за якою не
+      стоїть жодного відгуку.
+
+      Блок стоїть тільки на кореневій сторінці: продукт — це /MorseWorld/, а не
+      кожен його розділ. Решту сторінок tools/prerender.mjs від нього звільняє.
+    -->
+    <script type="application/ld+json" data-root-only>
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://uz-or.com/#person",
+            "name": "Nahreba Mykhailo",
+            "url": "https://uz-or.com/",
+            "jobTitle": "Product Engineer"
+          },
+          {
+            "@type": "SoftwareApplication",
+            "name": "MorseWorld",
+            "description": "A Morse code translator, a sandbox for a straight key, and a Koch method trainer. Everything runs in the browser: no account, no server, no network request after the page loads.",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Web browser",
+            "url": "https://uz-or.com/MorseWorld/",
+            "image": "https://uz-or.com/MorseWorld/og-image.png",
+            "inLanguage": ["en", "uk"],
+            "isAccessibleForFree": true,
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "author": { "@id": "https://uz-or.com/#person" },
+            "sameAs": ["https://github.com/uzorgame/MorseWorld"]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
