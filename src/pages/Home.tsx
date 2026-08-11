@@ -48,7 +48,7 @@ const CONTENT = {
       { value: '1200 / WPM', label: 'тривалість крапки в мілісекундах' },
       { value: '5–40', label: 'WPM, зі стисненням за Фарнсвортом' },
       { value: '< 20 мс', label: 'від натискання клавіші до звуку' },
-      { value: '0', label: 'мережевих запитів після завантаження' },
+      { value: '0', label: 'байтів вашого стуку надіслано назовні' },
     ],
     features: [
       {
@@ -113,7 +113,7 @@ const CONTENT = {
       { value: '1200 / WPM', label: 'dot length in milliseconds' },
       { value: '5–40', label: 'WPM, with Farnsworth spacing' },
       { value: '< 20 ms', label: 'from keypress to sound' },
-      { value: '0', label: 'network requests after load' },
+      { value: '0', label: 'bytes of your keying sent anywhere' },
     ],
     features: [
       {

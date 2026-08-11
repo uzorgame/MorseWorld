@@ -9,7 +9,7 @@ import './pages.css'
 const CONTENT = {
   uk: {
     title: 'Про проєкт',
-    lead: 'MorseWorld — інструмент для роботи з азбукою Морзе: перекласти, почути, відстукати вручну й навчитися приймати на слух. Усе рахується у вашому браузері: без сервера, без реєстрації, без мережі після завантаження сторінки.',
+    lead: 'MorseWorld — інструмент для роботи з азбукою Морзе: перекласти, почути, відстукати вручну й навчитися приймати на слух. Усе рахується у вашому браузері: без сервера й без реєстрації.',
     sheet: [
       {
         label: 'СТАТУС',
@@ -19,7 +19,7 @@ const CONTENT = {
       { label: 'СТЕК', value: 'TypeScript у строгому режимі, Vite, React, Web Audio API, AudioWorklet для DSP.' },
       { label: 'АРХІТЕКТУРА', value: 'Ядро в `/src/core` не імпортує нічого браузерного — приймає числа, віддає числа.' },
       { label: 'ДЕ ПРАЦЮЄ', value: 'Chrome і Edge 113+, Firefox 141+, Safari 17+. Офлайн після першого відвідування.' },
-      { label: 'ДАНІ', value: 'Нікуди не йдуть. Ні акаунтів, ні синхронізації, ні аналітики.' },
+      { label: 'ДАНІ', value: 'Ваші — нікуди не йдуть: ні акаунтів, ні синхронізації. Назовні йде лише лічильник відвідувань сторінок.' },
     ],
     can: [
       { code: '.-', text: 'Перекладати текст у морзе й назад, у обидва боки, на кожне натискання клавіші' },
@@ -48,7 +48,7 @@ const CONTENT = {
   },
   en: {
     title: 'About',
-    lead: 'MorseWorld is a tool for working with Morse code: translate it, hear it, key it by hand, and learn to copy it by ear. Everything runs in your browser — no server, no account, no network after the page loads.',
+    lead: 'MorseWorld is a tool for working with Morse code: translate it, hear it, key it by hand, and learn to copy it by ear. Everything runs in your browser — no server and no account.',
     sheet: [
       {
         label: 'STATUS',
@@ -58,7 +58,7 @@ const CONTENT = {
       { label: 'STACK', value: 'TypeScript in strict mode, Vite, React, Web Audio API, AudioWorklet for DSP.' },
       { label: 'ARCHITECTURE', value: 'The core in `/src/core` imports nothing from the browser — it takes numbers and returns numbers.' },
       { label: 'WHERE IT RUNS', value: 'Chrome and Edge 113+, Firefox 141+, Safari 17+. Offline after the first visit.' },
-      { label: 'DATA', value: 'Goes nowhere. No accounts, no sync, no analytics.' },
+      { label: 'DATA', value: 'Yours goes nowhere: no accounts, no sync. Only page views are counted.' },
     ],
     can: [
       { code: '.-', text: 'Translate text to Morse and back, both ways, on every keystroke' },

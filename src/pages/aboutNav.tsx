@@ -32,7 +32,7 @@ const ABOUT_PAGES = {
       to: '/about/privacy',
       code: '·−·−',
       title: 'Приватність',
-      body: 'Чому нуль мережевих запитів — це властивість, а не обіцянка.',
+      body: 'Чому «надсилати нікуди» — це властивість, а не обіцянка.',
     },
   ],
   en: [
@@ -58,7 +58,7 @@ const ABOUT_PAGES = {
       to: '/about/privacy',
       code: '·−·−',
       title: 'Privacy',
-      body: 'Why zero network requests is a property, not a promise.',
+      body: 'Why having nowhere to send it is a property, not a promise.',
     },
   ],
 } as const

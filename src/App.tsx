@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 
 import { audio } from './audio/MorseAudio'
@@ -62,6 +62,31 @@ export function App() {
     document.title = meta.title[lang]
     document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description[lang])
   }, [lang, pathname])
+
+  /**
+   * Показ сторінки на кожен клієнтський перехід.
+   *
+   * Це один документ на десять адрес, і тег сам бачить лише те, з чого гість
+   * почав: перехід через роутер не перезавантажує сторінку. Перевірено на живій
+   * збірці — без цього виклику дев'ять адрес із десяти не рахуються зовсім.
+   *
+   * Перший показ пропускається: його вже надіслав `gtag('config')` в index.html,
+   * і без пропуску сторінка входу лічилася б двічі.
+   *
+   * Заголовок тег читає з документа сам, і він уже правильний: ефект вище
+   * оголошений першим, тому й виконується першим.
+   */
+  const counted = useRef(false)
+  useEffect(() => {
+    if (!counted.current) {
+      counted.current = true
+      return
+    }
+    /* Без параметрів. Передані `page_location` чи `page_path` тег читає як зміну
+       контексту сторінки й додає до події ще й свій показ — кожен перехід ішов
+       двічі. Адресу він бере з документа, а вона вже нова, бо роутер її змінив. */
+    window.gtag?.('event', 'page_view')
+  }, [pathname])
 
   const finishBoot = useCallback(() => {
     sessionStorage.setItem(BOOT_KEY, '1')

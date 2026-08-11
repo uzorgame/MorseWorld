@@ -197,7 +197,7 @@ const NAV_UK: NavEntry[] = [
           to: '/about/privacy',
           code: '·−·−',
           title: 'Приватність',
-          body: 'Чому нуль мережевих запитів — це властивість, а не обіцянка.',
+          body: 'Чому «надсилати нікуди» — це властивість, а не обіцянка.',
         },
       ],
       note: {
@@ -376,7 +376,7 @@ const NAV_EN: NavEntry[] = [
           to: '/about/privacy',
           code: '·−·−',
           title: 'Privacy',
-          body: 'Why zero network requests is a property, not a promise.',
+          body: 'Why having nowhere to send it is a property, not a promise.',
         },
       ],
       note: {

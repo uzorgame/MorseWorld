@@ -42,7 +42,7 @@ const MODES: Record<'uk' | 'en', { id: Mode; label: string; hint: string }[]> = 
 const STRINGS = {
   uk: {
     title: 'Читання текстів',
-    lead: 'Справжні книжки замість випадкових літер. Тільки суспільне надбання: автор помер понад сімдесят років тому. Тексти лежать у репозиторії статичним модулем — під час роботи сторінка не робить жодного мережевого запиту.',
+    lead: 'Справжні книжки замість випадкових літер. Тільки суспільне надбання: автор помер понад сімдесят років тому. Тексти лежать у репозиторії статичним модулем — нічого не підвантажується з чужих сайтів.',
     backToKoch: '← Метод Коха',
     allTexts: '← Усі тексти',
     passages: (n: number) => counted(n, 'УРИВОК', 'УРИВКИ', 'УРИВКІВ'),
@@ -79,7 +79,7 @@ const STRINGS = {
   },
   en: {
     title: 'Reading texts',
-    lead: 'Real books instead of random letters. Public domain only: the author died more than seventy years ago. The texts live in the repository as a static module — while you work, the page makes no network request at all.',
+    lead: 'Real books instead of random letters. Public domain only: the author died more than seventy years ago. The texts live in the repository as a static module — nothing is fetched from another site.',
     backToKoch: '← Koch method',
     allTexts: '← All texts',
     passages: (n: number) => countedEn(n, 'PASSAGE', 'PASSAGES'),

@@ -5,7 +5,7 @@ import './shell.css'
 
 const STRINGS = {
   uk: {
-    note: 'Повністю клієнтський інструмент. Після завантаження сторінки — жодного мережевого запиту. Звук, мікрофон і прогрес не покидають ваш пристрій.',
+    note: 'Повністю клієнтський інструмент: без реєстрації й без бекенду. Звук, мікрофон і прогрес не покидають ваш пристрій.',
     tools: 'Інструменти',
     translator: 'Перекладач',
     decoder: 'Декодер',
@@ -23,7 +23,7 @@ const STRINGS = {
     author: 'Автор · дивитись портфоліо',
   },
   en: {
-    note: 'A fully client-side tool. After the page loads — no network requests at all. Audio, the microphone and your progress never leave your device.',
+    note: 'A fully client-side tool: no account and no backend. Audio, the microphone and your progress never leave your device.',
     tools: 'Tools',
     translator: 'Translator',
     decoder: 'Decoder',
